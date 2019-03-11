@@ -1,27 +1,22 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Interfaces;
-using SudokuConsole.Commands;
-using SudokuConsole.Interfaces;
+using Sudoku.Console.Commands;
+using Sudoku.Console.Enums;
+using Sudoku.Console.Interfaces;
 
-namespace SudokuConsole
+namespace Sudoku.Console
 {
     internal class CommandManager: ICommandContainer
     {
-        private readonly ISudoku _sudoku;
-        private readonly IGameContext _gameContext;
-        private readonly List<Command> _commands;
+        private readonly Dictionary<ECommandType, Command> _commands;
 
-        public CommandManager(IGameContext gameContext, ISudoku sudoku)
+        public CommandManager()
         {
-            _sudoku = sudoku;
-            _gameContext = gameContext;
-            _commands = new List<Command>();
+            _commands = new Dictionary<ECommandType, Command>();
         }
 
-        public IEnumerable<Command> Commands => _commands;
+        public IEnumerable<Command> Commands => _commands.Values;
 
 
         internal string Execute(CommandParser consoleParser)
@@ -32,17 +27,22 @@ namespace SudokuConsole
                 {
                     if (string.Equals(name, consoleParser.Name, StringComparison.CurrentCultureIgnoreCase))
                     {
-                        return command.Execute(consoleParser.Arguments.ToArray<string>());
+                        return command.Execute(consoleParser.Arguments.ToArray());
                     }
                 }
             }
 
-            return $"Command '{consoleParser.Name}' not implemented.";
+            return string.Format(Resources.CommandManager_Execute_CommandNotImplemented, consoleParser.Name);
         }
 
-        internal void AddCommand(Command command)
+        internal void AddCommand(ECommandType type, Command command)
         {
-            _commands.Add(command);
+            _commands.Add(type, command);
+        }
+
+        public Command GetCommand(ECommandType type)
+        {
+            return _commands.ContainsKey(type) ? _commands[type] : null;
         }
     }
 }

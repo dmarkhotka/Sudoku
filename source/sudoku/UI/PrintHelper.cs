@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using Core.Interfaces.Sudoku;
+using Sudoku.Core.Interfaces.Sudoku;
 
-namespace SudokuConsole
+namespace Sudoku.Console
 {
     public static class PrintHelper
     {
@@ -31,7 +31,12 @@ namespace SudokuConsole
 
         private static string PrintLevel(ISudokuResult result)
         {
-            return $"Level: {(int)result.Level} ({result.Level})";
+            var resultString = new StringBuilder();
+            resultString.AppendFormat(Resources.PrintHelper_PrintLevel_Level, (int)result.Level, result.Level);
+            resultString.AppendLine();
+            resultString.AppendFormat(Resources.PrintHelper_PrintLevel_Score, result.ComplexitiesScore);
+            resultString.AppendLine();
+            return resultString.ToString();
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Core.Interfaces;
-using SudokuConsole.Interfaces;
+﻿using Sudoku.Console.Interfaces;
+using Sudoku.Core.Interfaces;
 
-namespace SudokuConsole.Commands
+namespace Sudoku.Console.Commands
 {
     internal class SolveCommand : Command
     {
@@ -10,7 +10,7 @@ namespace SudokuConsole.Commands
 
         internal override string[] CommandNames => new[] { "s", "solve" };
 
-        internal override string HelpDescription => "\tSolve loaded or generated game";
+        internal override string HelpDescription => Resources.SolveCommand_HelpDescription;
 
         internal SolveCommand(IGameContext gameContext, ISudoku sudoku)
         {
@@ -22,18 +22,18 @@ namespace SudokuConsole.Commands
         {
             if (_gameContext.CurrentGame == null)
             {
-                return "Please, load or generate game.";
+                return Resources.SolveCommand_Execute_NotLoadedGame;
             }
 
             var result = _sudoku.Solve(_gameContext.CurrentGame);
 
             if (!result.HasSolution)
             {
-                return "No any solution for this game.";
+                return Resources.SolveCommand_Execute_NoSolution;
             }
             if (!result.IsUnique)
             {
-                return "More than one solution for this game.";
+                return Resources.SolveCommand_Execute_MoreThanOneSolution;
             }
 
             return PrintHelper.PrintResult(result);

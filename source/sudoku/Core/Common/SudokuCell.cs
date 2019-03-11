@@ -1,4 +1,4 @@
-﻿namespace Core.Common
+﻿namespace Sudoku.Core.Common
 {
     internal struct SudokuCell
     {
@@ -8,7 +8,7 @@
             Y = y;
         }
 
-        internal int X { get; private set; }
-        internal int Y { get; private set; }
+        internal int X { get; }
+        internal int Y { get; }
     }
 }

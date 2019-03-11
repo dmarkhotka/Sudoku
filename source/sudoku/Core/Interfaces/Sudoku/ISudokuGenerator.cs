@@ -1,5 +1,5 @@
 ﻿
-namespace Core.Interfaces.Sudoku
+namespace Sudoku.Core.Interfaces.Sudoku
 {
     public interface ISudokuGenerator
     {

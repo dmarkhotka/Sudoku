@@ -1,7 +1,6 @@
-﻿using System;
-using Core.Interfaces.Sudoku;
+﻿using Sudoku.Core.Interfaces.Sudoku;
 
-namespace Core.ClassicSudoku
+namespace Sudoku.Core.ClassicSudoku
 {
     public interface IClassicSudokuSolver: ISudokuSolver
     {

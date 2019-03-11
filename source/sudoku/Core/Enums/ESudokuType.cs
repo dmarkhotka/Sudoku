@@ -1,9 +1,8 @@
-﻿using System;
-namespace Core.Enums
+﻿namespace Sudoku.Core.Enums
 {
     public enum ESudokuType
     {
-        Classic9x9,
-        Classic16x16
+        Classic9X9,
+        Classic16X16
     }
 }

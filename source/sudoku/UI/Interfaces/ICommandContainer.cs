@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using SudokuConsole.Commands;
+﻿using System.Collections.Generic;
+using Sudoku.Console.Commands;
 
-namespace SudokuConsole.Interfaces
+namespace Sudoku.Console.Interfaces
 {
     internal interface ICommandContainer
     {

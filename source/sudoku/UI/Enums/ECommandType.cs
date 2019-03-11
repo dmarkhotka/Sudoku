@@ -1,5 +1,4 @@
-﻿using System;
-namespace SudokuConsole.Enums
+﻿namespace Sudoku.Console.Enums
 {
     public enum ECommandType
     {

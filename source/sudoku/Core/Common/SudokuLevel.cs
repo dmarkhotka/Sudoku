@@ -1,12 +1,11 @@
-﻿using System;
-using Core.Enums;
-using Core.Interfaces.Sudoku;
+﻿using Sudoku.Core.Enums;
+using Sudoku.Core.Interfaces.Sudoku;
 
-namespace Core.Common
+namespace Sudoku.Core.Common
 {
-    internal class SudokuLevel : ISudokuLevel
+    public class SudokuLevel : ISudokuLevel
     {
-        public ESudokuLevel Level { get; private set; }
+        public ESudokuLevel Level { get; }
 
         public SudokuLevel(ESudokuLevel level)
         {
@@ -34,7 +33,7 @@ namespace Core.Common
         {
             var level = ESudokuLevel.None;
 
-            if (backTrackCount >= 50 && backTrackCount < 150)
+            if (backTrackCount >= 40 && backTrackCount < 150)
             {
                 level = ESudokuLevel.Easy;
             }

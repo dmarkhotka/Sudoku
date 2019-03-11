@@ -1,12 +1,12 @@
 ﻿using System;
 using System.IO;
-using Core.Interfaces.Data;
+using Sudoku.Core.Interfaces.Data;
 
-namespace Core.Data
+namespace Sudoku.Core.Data
 {
-    internal class FileLoader : IDataLoader
+    public class FileLoader : IDataLoader
     {
-        string _path;
+        readonly string _path;
 
         public FileLoader(string path)
         {
@@ -21,7 +21,7 @@ namespace Core.Data
             {
                 if (file[i].Length != file.Length)
                 {
-                    throw new NotSupportedException($"Unsuported file format: Column count not equals row count.");
+                    throw new NotSupportedException(Resources.FileLoader_Load_UnsupportedFileFormat);
                 }
                 for (int j = 0; j < file[i].Length; j++)
                 {

@@ -1,6 +1,6 @@
-﻿using Core.Enums;
+﻿using Sudoku.Core.Enums;
 
-namespace Core.Interfaces.Sudoku
+namespace Sudoku.Core.Interfaces.Sudoku
 {
     public interface ISudokuResult
     {

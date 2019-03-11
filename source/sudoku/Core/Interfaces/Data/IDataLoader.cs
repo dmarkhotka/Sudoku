@@ -1,5 +1,4 @@
-﻿using System;
-namespace Core.Interfaces.Data
+﻿namespace Sudoku.Core.Interfaces.Data
 {
     public interface IDataLoader
     {

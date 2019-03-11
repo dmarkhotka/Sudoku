@@ -1,7 +1,6 @@
-﻿using System;
-using Core.Interfaces.Data;
+﻿using Sudoku.Core.Interfaces.Data;
 
-namespace Core.Data
+namespace Sudoku.Core.Data
 {
     internal class DataLoadFactory
     {

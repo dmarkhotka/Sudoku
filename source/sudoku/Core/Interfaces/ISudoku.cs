@@ -1,8 +1,7 @@
-﻿using System;
-using Core.Enums;
-using Core.Interfaces.Sudoku;
+﻿using Sudoku.Core.Enums;
+using Sudoku.Core.Interfaces.Sudoku;
 
-namespace Core.Interfaces
+namespace Sudoku.Core.Interfaces
 {
     public interface ISudoku
     {

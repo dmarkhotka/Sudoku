@@ -1,5 +1,4 @@
-﻿using System;
-namespace Core.Enums
+﻿namespace Sudoku.Core.Enums
 {
     public enum ESudokuLevel
     {

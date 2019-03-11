@@ -1,5 +1,4 @@
-﻿using System;
-namespace SudokuConsole.Interfaces
+﻿namespace Sudoku.Console.Interfaces
 {
     public interface IGameContext
     {

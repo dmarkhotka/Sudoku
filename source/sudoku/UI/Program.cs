@@ -1,29 +1,29 @@
 ﻿using System;
-using Core;
-using Core.Enums;
-using SudokuConsole.Commands;
+using Sudoku.Console.Commands;
+using Sudoku.Console.Enums;
+using Sudoku.Core.Enums;
 
-namespace SudokuConsole
+namespace Sudoku.Console
 {
     class Program
     {
-        private const string PromtMessage = "sudoku";
-
         static void Main()
         {
             var context = new GameContext();
-            var sudoku = Sudoku.GetSudoku(ESudokuType.Classic9x9);
-            CommandManager commandManager = new CommandManager(context, sudoku);
-            commandManager.AddCommand(new LoadFromFileCommand(context, sudoku));
-            commandManager.AddCommand(new SolveCommand(context, sudoku));
-            commandManager.AddCommand(new GenerateCommand(context, sudoku));
-            commandManager.AddCommand(new HelpCommand(commandManager));
+            var sudoku = Core.Sudoku.GetSudoku(ESudokuType.Classic9X9);
+            CommandManager commandManager = new CommandManager();
+            commandManager.AddCommand(ECommandType.LoadFromFile, new LoadFromFileCommand(context, sudoku));
+            commandManager.AddCommand(ECommandType.Solve, new SolveCommand(context, sudoku));
+            commandManager.AddCommand(ECommandType.Generate, new GenerateCommand(context, sudoku));
+            commandManager.AddCommand(ECommandType.Help, new HelpCommand(commandManager));
 
             Run(commandManager);
         }
 
         private static void Run(CommandManager commandManager)
         {
+            Command helpCommand = commandManager.GetCommand(ECommandType.Help);
+            WriteToConsole(helpCommand.Execute(null));
             while (true)
             {
                 var input = ReadFromConsole();
@@ -41,22 +41,22 @@ namespace SudokuConsole
                 }
                 catch (Exception ex)
                 {
-                    WriteToConsole($"Something went wrong: {ex.Message}");
+                    WriteToConsole(string.Format(Resources.Program_Run_SomethingWentWrong, ex.Message));
                 }
             }
         }
 
         public static string ReadFromConsole()
         {
-            Console.Write($"{PromtMessage}> ");
-            return Console.ReadLine();
+            System.Console.Write(Resources.Program_ReadFromConsole_PromptMessage);
+            return System.Console.ReadLine();
         }
 
         public static void WriteToConsole(string message)
         {
             if (!string.IsNullOrEmpty(message))
             {
-                Console.WriteLine(message);
+                System.Console.WriteLine(message);
             }
         }
     }

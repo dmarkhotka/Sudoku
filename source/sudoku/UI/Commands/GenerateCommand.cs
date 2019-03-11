@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using Core.Enums;
-using Core.Interfaces;
-using SudokuConsole.Interfaces;
+using Sudoku.Console.Interfaces;
+using Sudoku.Core.Enums;
+using Sudoku.Core.Interfaces;
 
-namespace SudokuConsole.Commands
+namespace Sudoku.Console.Commands
 {
     internal class GenerateCommand : Command
     {
@@ -12,9 +12,9 @@ namespace SudokuConsole.Commands
         private readonly IGameContext _gameContext;
 
         internal override string[] CommandNames => new[] { "g", "generate" };
-        internal override string[] CommandArgs => new[] { "[level]" };
+        internal override string[] CommandArgs => new[] { Resources.GenerateCommand_CommandArgs_level };
 
-        internal override string HelpDescription => "Generate a game by level. 1-Easy, 2-Medium, 3-Hard, 4-Samurai";
+        internal override string HelpDescription => Resources.GenerateCommand_HelpDescriptioni;
 
         internal GenerateCommand(IGameContext gameContext, ISudoku sudoku)
         {
@@ -25,13 +25,13 @@ namespace SudokuConsole.Commands
         internal override string Execute(string[] args)
         {
             var stringLevel = args.FirstOrDefault();
-            if (Enum.TryParse<ESudokuLevel>(stringLevel ?? ESudokuLevel.Medium.ToString(), out ESudokuLevel level))
+            if (Enum.TryParse(stringLevel ?? ESudokuLevel.Medium.ToString(), out ESudokuLevel level))
             {
                 var result = _sudoku.Generate(level);
                 _gameContext.CurrentGame = result.Data;
                 return PrintHelper.PrintResult(result);
             }
-            return "Please, enter correct level number.";
+            return Resources.GenerateCommand_Execute_IncorectLevelNumber;
         }
     }
 }

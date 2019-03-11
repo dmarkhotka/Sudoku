@@ -1,19 +1,19 @@
 ﻿using System;
-using Core.ClassicSudoku;
-using Core.Common;
-using Core.Data;
-using Core.Enums;
-using Core.Interfaces;
-using Core.Interfaces.Data;
-using Core.Interfaces.Sudoku;
+using Sudoku.Core.ClassicSudoku;
+using Sudoku.Core.Common;
+using Sudoku.Core.Data;
+using Sudoku.Core.Enums;
+using Sudoku.Core.Interfaces;
+using Sudoku.Core.Interfaces.Data;
+using Sudoku.Core.Interfaces.Sudoku;
 
-namespace Core
+namespace Sudoku.Core
 {
     public class Sudoku: ISudoku
     {
-        ISudokuSolver _solver;
-        ISudokuGenerator _generator;
-        DataLoadFactory _loadFactory;
+        readonly ISudokuSolver _solver;
+        readonly ISudokuGenerator _generator;
+        readonly DataLoadFactory _loadFactory;
 
         private Sudoku(ISudokuSolver solver, ISudokuGenerator generator)
         {
@@ -28,11 +28,11 @@ namespace Core
             ISudokuGenerator generator;
             switch (type)
             {
-                case ESudokuType.Classic9x9:
+                case ESudokuType.Classic9X9:
                     solver = new ClassicSudokuSolver(EClassicSudokuType.Classic9x9);
                     generator =  new ClassicSudokuGenerator((IClassicSudokuSolver)solver);
                     break;
-                case ESudokuType.Classic16x16:
+                case ESudokuType.Classic16X16:
                     solver = new ClassicSudokuSolver(EClassicSudokuType.Classic16x16);
                     generator = new ClassicSudokuGenerator((IClassicSudokuSolver)solver);
                     break;

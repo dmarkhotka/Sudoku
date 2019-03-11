@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace SudokuConsole
+namespace Sudoku.Console
 {
     public class CommandParser
     {
-        private List<string> _arguments;
+        private readonly List<string> _arguments;
 
-        public string Name { get; private set; }
+        public string Name { get; }
         public IEnumerable<string> Arguments => _arguments;
 
         public CommandParser(string str)

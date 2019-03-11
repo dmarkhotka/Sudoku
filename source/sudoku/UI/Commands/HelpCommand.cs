@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using SudokuConsole.Interfaces;
+using Sudoku.Console.Interfaces;
 
-namespace SudokuConsole.Commands
+namespace Sudoku.Console.Commands
 {
     internal class HelpCommand : Command
     {
@@ -9,7 +9,7 @@ namespace SudokuConsole.Commands
 
         internal override string[] CommandNames => new[] { "h", "help" };
 
-        internal override string HelpDescription => "\tShow this message";
+        internal override string HelpDescription => Resources.HelpCommand_HelpDescription;
 
         internal HelpCommand(ICommandContainer commandContainer)
         {

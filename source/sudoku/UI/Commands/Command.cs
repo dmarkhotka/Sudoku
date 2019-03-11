@@ -1,5 +1,4 @@
-﻿using System;
-namespace SudokuConsole.Commands
+﻿namespace Sudoku.Console.Commands
 {
     internal abstract class Command
     {

@@ -1,7 +1,7 @@
-﻿using Core.Interfaces;
-using SudokuConsole.Interfaces;
+﻿using Sudoku.Console.Interfaces;
+using Sudoku.Core.Interfaces;
 
-namespace SudokuConsole.Commands
+namespace Sudoku.Console.Commands
 {
     internal class LoadFromFileCommand : Command
     {
@@ -9,9 +9,9 @@ namespace SudokuConsole.Commands
         private readonly IGameContext _gameContext;
 
         internal override string[] CommandNames => new[] { "l", "load" };
-        internal override string[] CommandArgs => new[] { "<path>"};
+        internal override string[] CommandArgs => new[] { Resources.LoadFromFileCommand_CommandArgs_path};
 
-        internal override string HelpDescription => "Load game from a file";
+        internal override string HelpDescription => Resources.LoadFromFileCommand_HelpDescription;
 
         internal LoadFromFileCommand(IGameContext gameContext, ISudoku sudoku)
         {
@@ -26,7 +26,7 @@ namespace SudokuConsole.Commands
                 _gameContext.CurrentGame = _sudoku.LoadFromFile(args[0]);
                 return PrintHelper.PrintMatrix(_gameContext.CurrentGame);
             }
-            return "Please, enter correct path to file.";
+            return Resources.LoadFromFileCommand_Execute_IncorrectPath;
         }
     }
 }

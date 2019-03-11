@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Common;
-using Core.Interfaces.Sudoku;
+using Sudoku.Core.Common;
+using Sudoku.Core.Interfaces.Sudoku;
 
-namespace Core.ClassicSudoku
+namespace Sudoku.Core.ClassicSudoku
 {
-    internal class ClassicSudokuGenerator : ISudokuGenerator
+    public class ClassicSudokuGenerator : ISudokuGenerator
     {
-        private IClassicSudokuSolver _solver;
-        Queue<SudokuCell> cellsForHiding;
+        private readonly IClassicSudokuSolver _solver;
+        Queue<SudokuCell> _cellsForHiding;
 
         public ClassicSudokuGenerator(IClassicSudokuSolver solver)
         {
@@ -18,12 +18,12 @@ namespace Core.ClassicSudoku
 
         public ISudokuResult Generate(ISudokuLevel level)
         {
-            var result = _solver.GenereateSolved();
+            var result = _solver.GenerateSolved();
 
-            cellsForHiding = new Queue<SudokuCell>(
+            _cellsForHiding = new Queue<SudokuCell>(
                 Enumerable.Range(0, _solver.BlockCount * _solver.BlockCount)
                     .OrderBy(x => Guid.NewGuid())
-                    .Select(x => Helper.GetCellByIndex(x, _solver.BlockCount)));
+                    .Select(x => BlockHelper.GetCellByIndex(x, _solver.BlockCount)));
 
             result = RemovePossibleValue(result.Data, level);
             result.Level = level.Level;
@@ -33,9 +33,9 @@ namespace Core.ClassicSudoku
         private ISudokuResult RemovePossibleValue(int[,] data, ISudokuLevel level)
         {
             var notSuitableCells = new List<SudokuCell>();
-            while (cellsForHiding.Count > 0)
+            while (_cellsForHiding.Count > 0)
             {
-                var cell = cellsForHiding.Dequeue();
+                var cell = _cellsForHiding.Dequeue();
                 if (notSuitableCells.Contains(cell))
                 {
                     continue;
@@ -48,7 +48,7 @@ namespace Core.ClassicSudoku
                 {
                     if (level.IsMatching(result))
                     {
-                        var generateResult = new SudokuResult { BackTrackCount = result.BackTrackCount };
+                        var generateResult = new SudokuResult { BackTrackCount = result.BackTrackCount, ComplexitiesScore = result.ComplexitiesScore };
                         generateResult.AddSolution(data);
                         return generateResult;
                     }
@@ -66,7 +66,7 @@ namespace Core.ClassicSudoku
             }
             foreach (var cell in notSuitableCells)
             {
-                cellsForHiding.Enqueue(cell);
+                _cellsForHiding.Enqueue(cell);
             }
             return null;
         }

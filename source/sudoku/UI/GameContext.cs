@@ -1,6 +1,6 @@
-﻿using SudokuConsole.Interfaces;
+﻿using Sudoku.Console.Interfaces;
 
-namespace SudokuConsole
+namespace Sudoku.Console
 {
     public class GameContext: IGameContext
     {

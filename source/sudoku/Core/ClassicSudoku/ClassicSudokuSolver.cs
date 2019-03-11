@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Common;
-using Core.Interfaces.Sudoku;
+using Sudoku.Core.Common;
+using Sudoku.Core.Interfaces.Sudoku;
 
-namespace Core.ClassicSudoku
+namespace Sudoku.Core.ClassicSudoku
 {
-    internal class ClassicSudokuSolver : IClassicSudokuSolver
+    public class ClassicSudokuSolver : IClassicSudokuSolver
     {
-        private Dictionary<SudokuCell, List<int>> cellCandidatesDictionary;
+        private Dictionary<SudokuCell, List<int>> _cellCandidatesDictionary;
         public ClassicSudokuSolver(EClassicSudokuType type)
         {
             BlockCount = (int)type;
         }
 
-        public int BlockCount { get; private set; }
+        public int BlockCount { get; }
 
         private int BlockRowCount => (int)Math.Sqrt(BlockCount);
 
-        public ISudokuResult GenereateSolved()
+        public ISudokuResult GenerateSolved()
         {
             int[,] data = new int[BlockCount, BlockCount];
             var result = new SudokuResult();
@@ -58,14 +58,14 @@ namespace Core.ClassicSudoku
                 if (ValidateIntegrity(cells))
                 {
                     data[keyValuesPair.Item1.X, keyValuesPair.Item1.Y] = value;
-                    var values = new List<int>(cellCandidatesDictionary[keyValuesPair.Item1]);
-                    cellCandidatesDictionary[keyValuesPair.Item1].Clear();
+                    var values = new List<int>(_cellCandidatesDictionary[keyValuesPair.Item1]);
+                    _cellCandidatesDictionary[keyValuesPair.Item1].Clear();
                     if (Solve(data, useRandom, result) && !result.IsUnique)
                     {
                         return true;
                     }
                     data[keyValuesPair.Item1.X, keyValuesPair.Item1.Y] = 0;
-                    cellCandidatesDictionary[keyValuesPair.Item1].AddRange(values);
+                    _cellCandidatesDictionary[keyValuesPair.Item1].AddRange(values);
                 }
                 UndoApplyCandidate(cells, value);
             }
@@ -77,7 +77,7 @@ namespace Core.ClassicSudoku
             var isValid = true;
             foreach (var cell in cells)
             {
-                if (cellCandidatesDictionary[cell].Count < 1)
+                if (_cellCandidatesDictionary[cell].Count < 1)
                 {
                     isValid = false;
                     break;
@@ -103,10 +103,10 @@ namespace Core.ClassicSudoku
                     return false;
                 }
             }
-            int xStartPosition = Helper.GetBlockStartPosition(cell.X, BlockRowCount);
-            int xEndPosition = Helper.GetBlockEndPosition(cell.X, BlockRowCount);
-            int yStartPosition = Helper.GetBlockStartPosition(cell.Y, BlockRowCount);
-            int yEndPosition = Helper.GetBlockEndPosition(cell.Y, BlockRowCount);
+            int xStartPosition = BlockHelper.GetBlockStartPosition(cell.X, BlockRowCount);
+            int xEndPosition = BlockHelper.GetBlockEndPosition(cell.X, BlockRowCount);
+            int yStartPosition = BlockHelper.GetBlockStartPosition(cell.Y, BlockRowCount);
+            int yEndPosition = BlockHelper.GetBlockEndPosition(cell.Y, BlockRowCount);
             // Check sector
             for (int i = xStartPosition; i < xEndPosition; i++)
             {
@@ -129,31 +129,31 @@ namespace Core.ClassicSudoku
             {
                 // Check row
                 var reducedCell = new SudokuCell(cell.X, i);
-                if (i != cell.Y && cellCandidatesDictionary.ContainsKey(reducedCell) 
-                                && cellCandidatesDictionary[reducedCell].Remove(value))
+                if (i != cell.Y && _cellCandidatesDictionary.ContainsKey(reducedCell) 
+                                && _cellCandidatesDictionary[reducedCell].Remove(value))
                 {
                     result.Add(reducedCell);
                 }
                 // Check column
                 reducedCell = new SudokuCell(i, cell.Y);
-                if (i != cell.X && cellCandidatesDictionary.ContainsKey(reducedCell) 
-                                && cellCandidatesDictionary[reducedCell].Remove(value))
+                if (i != cell.X && _cellCandidatesDictionary.ContainsKey(reducedCell) 
+                                && _cellCandidatesDictionary[reducedCell].Remove(value))
                 {
                     result.Add(reducedCell);
                 }
             }
-            int xStartPosition = Helper.GetBlockStartPosition(cell.X, BlockRowCount);
-            int xEndPosition = Helper.GetBlockEndPosition(cell.X, BlockRowCount);
-            int yStartPosition = Helper.GetBlockStartPosition(cell.Y, BlockRowCount);
-            int yEndPosition = Helper.GetBlockEndPosition(cell.Y, BlockRowCount);
+            int xStartPosition = BlockHelper.GetBlockStartPosition(cell.X, BlockRowCount);
+            int xEndPosition = BlockHelper.GetBlockEndPosition(cell.X, BlockRowCount);
+            int yStartPosition = BlockHelper.GetBlockStartPosition(cell.Y, BlockRowCount);
+            int yEndPosition = BlockHelper.GetBlockEndPosition(cell.Y, BlockRowCount);
             // Check sector
             for (int i = xStartPosition; i < xEndPosition; i++)
             {
                 for (int j = yStartPosition; j < yEndPosition; j++)
                 {
                     var reducedCell = new SudokuCell(i, j);
-                    if (!(i == cell.X || j == cell.Y) && cellCandidatesDictionary.ContainsKey(reducedCell) 
-                                                      && cellCandidatesDictionary[reducedCell].Remove(value))
+                    if (!(i == cell.X || j == cell.Y) && _cellCandidatesDictionary.ContainsKey(reducedCell) 
+                                                      && _cellCandidatesDictionary[reducedCell].Remove(value))
                     {
                         result.Add(reducedCell);
                     }
@@ -166,17 +166,17 @@ namespace Core.ClassicSudoku
         {
             foreach (SudokuCell cell in cells)
             {
-                cellCandidatesDictionary[cell].Add(value);
+                _cellCandidatesDictionary[cell].Add(value);
             }
         }
 
         private Tuple<SudokuCell, List<int>> FindNextCell(SudokuResult result)
         {
-            IEnumerable<List<int>> cellsWithNonEmptyCandidates = cellCandidatesDictionary.Values.Where(x => x.Count > 0);
+            var cellsWithNonEmptyCandidates = _cellCandidatesDictionary.Values.Where(x => x.Count > 0).ToList();
             if (cellsWithNonEmptyCandidates.Any())
             {
                 var levelDictionary = new Dictionary<int, int>();
-                foreach (var values in cellCandidatesDictionary.Values)
+                foreach (var values in _cellCandidatesDictionary.Values)
                 {
                     if (!levelDictionary.ContainsKey(values.Count))
                     {
@@ -186,7 +186,7 @@ namespace Core.ClassicSudoku
                 }
                 result.ComplexitiesScore += levelDictionary.Select(x => x.Key * x.Value).Sum();
                 int minWeight = cellsWithNonEmptyCandidates.Min(x => x.Count);
-                return cellCandidatesDictionary.Where(x => x.Value.Count == minWeight)
+                return _cellCandidatesDictionary.Where(x => x.Value.Count == minWeight)
                     .Select(x => new Tuple<SudokuCell, List<int>>(x.Key, x.Value.ToList()))
                     .FirstOrDefault();
             }
@@ -195,7 +195,7 @@ namespace Core.ClassicSudoku
 
         private void FindAllCandidates(int[,] data)
         {
-            cellCandidatesDictionary = new Dictionary<SudokuCell, List<int>>();
+            _cellCandidatesDictionary = new Dictionary<SudokuCell, List<int>>();
             for (int i = 0; i < BlockCount; i++)
             {
                 for (int j = 0; j < BlockCount; j++)
@@ -207,13 +207,13 @@ namespace Core.ClassicSudoku
                             if (Validate(data, new SudokuCell(i, j), k))
                             {
                                 SudokuCell newCell = new SudokuCell(i, j);
-                                if (!cellCandidatesDictionary.ContainsKey(newCell))
+                                if (!_cellCandidatesDictionary.ContainsKey(newCell))
                                 {
-                                    cellCandidatesDictionary.Add(newCell, new List<int>());
+                                    _cellCandidatesDictionary.Add(newCell, new List<int>());
                                 }
-                                if (!cellCandidatesDictionary[newCell].Contains(k))
+                                if (!_cellCandidatesDictionary[newCell].Contains(k))
                                 {
-                                    cellCandidatesDictionary[newCell].Add(k);
+                                    _cellCandidatesDictionary[newCell].Add(k);
                                 }
 
                             }
@@ -221,12 +221,6 @@ namespace Core.ClassicSudoku
                     }
                 }
             }
-            ExcludeUnnecessary();
-        }
-
-        //Todo: Should be implemented for reduce all possible values for each row, column and block
-        private void ExcludeUnnecessary()
-        {
         }
     }
 }
